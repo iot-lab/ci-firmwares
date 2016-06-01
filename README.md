@@ -24,20 +24,22 @@ To be continued...
 ### Usage
 
 1. Build the firmwares
-<pre>
-$ cd ci-firmwares
-$ for firmware in idle autotest
-do
-cd firmwares/$firmware
-for board in iotlab-m3 samr21-xpro arduino-mega2560 fox
-do
-make BOARD=$board
-done
-cd ../..
-done
-</pre>
-2. Copy the firmware in the **iotlab-gateway** repositoty. The built firmwares are
-   located in **firmwares/autotest/bin/samr21-xpro/autotest.elf** for example.
+```
+$ make all
+git submodule update --init --recursive
+make -C firmwares/autotest/ BOARD=iotlab-m3
+make[1]: Entering directory `/home/harter/work/ci-firmwares/firmwares/autotest'
+...
+make[1]: Leaving directory `/home/harter/work/ci-firmwares/firmwares/idle'
+cp firmwares/idle/bin/arduino-mega2560/riot-idle.elf mega_idle.elf
+
+$ ls *.elf
+a8_autotest.elf   fox_idle.elf     mega_autotest.elf    samr21_idle.elf
+a8_idle.elf       m3_autotest.elf  mega_idle.elf
+fox_autotest.elf  m3_idle.elf      samr21_autotest.elf
+```
+
+2. Copy the firmware in the **iotlab-gateway** repositoty.
    The destination folder is **iotlab-gateway/gateway-code/static**.
 
 
