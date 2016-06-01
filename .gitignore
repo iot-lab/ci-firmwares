@@ -21,3 +21,5 @@ Gemfile.lock
 parts/
 
 bin/
+
+*.elf
