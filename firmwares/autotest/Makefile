@@ -7,7 +7,8 @@ BOARD ?= samr21-xpro
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE = $(CURDIR)/../../riot-upstream
 
-FEATURES_REQUIRED += periph_uart periph_gpio
+FEATURES_REQUIRED += periph_uart
+FEATURES_REQUIRED += periph_gpio
 USEMODULE += shell xtimer
 
 # Comment this out to disable code in RIOT that does safety checking

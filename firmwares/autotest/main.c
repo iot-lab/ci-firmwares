@@ -20,67 +20,142 @@
 #include "board.h"
 #include "shell.h"
 #include "xtimer.h"
+#include "thread.h"
 #include "periph/uart.h"
 #include "periph/gpio.h"
 
-#define NUM_LEDS (3U)
+#define NUM_LEDS              (3U)
+
+static char blink_stack[THREAD_STACKSIZE_DEFAULT];
 
 static int board_leds[NUM_LEDS] = { -1, -1, -1 };
 static int leds_indices[NUM_LEDS] = { 0, 0, 0 };
+static bool blink = false;
+static int delay = 100;
 
-static void byte_to_binary(int x)
+static void toggle_leds_on(void)
 {
-    for (unsigned int i = 0; i < NUM_LEDS; ++i) {
+    for (unsigned i = 0; i < NUM_LEDS; ++i) {
+        if ( (board_leds[i] != -1) && (leds_indices[i])) {
+            gpio_clear(board_leds[i]);
+        }
+    }
+}
+
+static void toggle_leds_off(void)
+{
+    for (unsigned i = 0; i < NUM_LEDS; ++i) {
+        if ((board_leds[i] != -1) && (leds_indices[i])) {
+            gpio_set(board_leds[i]);
+        }
+    }
+}
+
+static void byte_to_binary(unsigned x)
+{
+    for (unsigned i = 0; i < NUM_LEDS; ++i) {
         leds_indices[NUM_LEDS - i - 1] = 0;
         if (x & (1 << i)) {
             leds_indices[NUM_LEDS - i - 1] = 1;
         }
     }
-    
+
     return;
 }
 
-static int cmd_led_on(int argc, char **argv)
+static void *blink_thread(void *args)
 {
-    unsigned int led = 0;
-    if (argc != 2) {
-        return 1;
+    while(1) {
+        if (blink) {
+            toggle_leds_on();
+            xtimer_usleep(delay * 1000U);
+            toggle_leds_off();
+        }
+        xtimer_usleep(delay * 1000U);
     }
-    
-    if (1 != sscanf(argv[1], "%u", &led)) {
+
+    return NULL;
+}
+
+static int cmd_leds_on(int argc, char **argv)
+{
+    if (argc != 2) {
+        puts("NACK leds_on: wrong number of arguments");
         return 1;
     }
 
-    byte_to_binary(led);
-    for (unsigned int i = 0; i < NUM_LEDS; ++i) {
-        if (board_leds[i] != -1) {
-            gpio_write(board_leds[i], 1 - leds_indices[i]);        
-        }
+    unsigned leds = 0;
+    if (1 != sscanf(argv[1], "%u", &leds)) {
+        puts("NACK leds_on: invalid led number");
+        return 1;
     }
-    
-    printf("ACK %s %x\n", argv[0], led);
+
+    byte_to_binary(leds);
+    toggle_leds_on();
+
+    printf("ACK %s %x\n", argv[0], leds);
     return 0;
 }
 
-static int cmd_led_off(int argc, char **argv)
+static int cmd_leds_off(int argc, char **argv)
 {
-    unsigned int led = 0;
     if (argc != 2) {
+        puts("NACK leds_off: wrong number of arguments");
         return 1;
     }
 
-    if (!sscanf(argv[1], "%u", &led)) {
+    unsigned int leds = 0;
+    if (1 != sscanf(argv[1], "%u", &leds)) {
+        puts("NACK leds_off: invalid led number");
         return 1;
     }
 
-    byte_to_binary(led);
-    for (unsigned int i = 0; i < NUM_LEDS; ++i) {
-        if (board_leds[i] != -1) {
-            gpio_write(board_leds[i], leds_indices[i]);        
-        }
+    byte_to_binary(leds);
+    toggle_leds_off();
+
+    blink = false;
+
+    printf("ACK %s %d\n", argv[0], leds);
+    return 0;
+}
+
+static int cmd_leds_blink(int argc, char **argv)
+{
+    if (argc != 3) {
+        puts("NACK leds_blink: wrong number of arguments");
+        return 1;
     }
 
-    printf("ACK %s %x\n", argv[0], led);
+    unsigned int leds = 0;
+    if (1 != sscanf(argv[1], "%u", &leds)) {
+        puts("NACK leds_blink: invalid led number");
+        return 1;
+    }
+    byte_to_binary(leds);
+
+    int delay_tmp;
+    if (1 != sscanf(argv[2], "%i", &delay_tmp)) {
+        puts("NACK leds_blink: invalid delay argument");
+        return 1;
+    }
+    
+    if (delay_tmp == 0) {
+        toggle_leds_off();
+        blink = false;
+        printf("ACK %s STOP\n", argv[0]);
+        return 0;
+    }
+
+    if (delay_tmp < 10 || delay_tmp > 10000) {
+        puts("NACK leds_blink: delay too long or too short");
+        return 1;
+    }
+
+    toggle_leds_off();
+    delay = delay_tmp;
+    blink = true;
+
+    printf("ACK %s %d %d\n", argv[0], leds, delay);
     return 0;
 }
 
@@ -103,8 +178,9 @@ static int cmd_get_time(int argc, char **argv)
     if (argc != 1) {
         return 1;
     }
+    uint32_t now = xtimer_now().ticks32;
 
-    printf("ACK %s %u ticks_32khz\n", argv[0], (unsigned int)xtimer_now());
+    printf("ACK %s %u ticks_32khz\n", argv[0], (unsigned int)now);
 
     return 0;
 }
@@ -112,13 +188,14 @@ static int cmd_get_time(int argc, char **argv)
 static const shell_command_t shell_commands[] = {
     { "echo",       "Simply write 'echo'",               cmd_echo},
     { "get_time",   "Simply return current timer value", cmd_get_time},
-    { "leds_on",    "Turn led on",                       cmd_led_on},
-    { "leds_off",   "Turn led off",                      cmd_led_off},
+    { "leds_on",    "Turn leds on",                      cmd_leds_on},
+    { "leds_off",   "Turn leds off",                     cmd_leds_off},
+    { "leds_blink", "Make leds blink",                   cmd_leds_blink},
     { NULL, NULL, NULL }
 };
 
 int main(void)
-{   
+{
 #ifdef LED0_PIN
     board_leds[0] = LED0_PIN;
 #endif
@@ -130,6 +207,11 @@ int main(void)
 #ifdef LED2_PIN
     board_leds[2] = LED2_PIN;
 #endif
+
+    thread_create(blink_stack, sizeof(blink_stack),
+                  THREAD_PRIORITY_MAIN - 1,
+                  THREAD_CREATE_STACKTEST, blink_thread,
+                  NULL, "Leds blink thread");
 
     char buffer[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, buffer, SHELL_DEFAULT_BUFSIZE);
