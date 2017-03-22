@@ -21,5 +21,8 @@ PREFIX_samr21-xpro = samr21
 ARCHIS += arduino-mega2560
 PREFIX_arduino-mega2560 = mega
 
+ARCHIS += arduino-zero
+PREFIX_arduino-zero = arduino_zero
+
 
 include Makefile.in
