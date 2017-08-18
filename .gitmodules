@@ -1,3 +1,0 @@
-[submodule "riot-upstream"]
-	path = riot-upstream
-	url = git@github.com:iot-lab/riot-upstream.git
