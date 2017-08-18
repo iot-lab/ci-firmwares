@@ -1,0 +1,3 @@
+[submodule "riot-upstream"]
+	path = riot-upstream
+	url = git@github.com:RIOT-OS/RIOT
