@@ -25,3 +25,6 @@ bin/
 *.elf
 #pycharm
 .idea/
+
+arduino/arduino-1.8.5*
+build-*
