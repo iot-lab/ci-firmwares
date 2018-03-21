@@ -1,10 +1,7 @@
-## Iotlab Continuous Integration System Firmwares
-
-This repository contains the instructions and firmware source codes to be used
-with the continuous integration system of Iotlab.
+## RIOT IoT-LAB Continuous Integration System Firmwares
 
 The firmwares are based on [RIOT](https://github.com/RIOT-OS/RIOT) operating
-system. Iotlab CI uses 2 different firmwares:
+system. IoT-LAB CI uses 2 different firmwares:
 * **idle** does basically nothing and is only used to verify that the board can
   be flashed by the iotlab management tools;
 
