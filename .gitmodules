@@ -1,3 +1,9 @@
 [submodule "riot-upstream"]
-	path = riot-upstream
+	path = riot/riot-upstream
 	url = git@github.com:RIOT-OS/RIOT
+[submodule "Arduino-Makefile"]
+	path = arduino/Arduino-Makefile
+	url = git@github.com:sudar/Arduino-Makefile.git
+[submodule "arduino/arduino-zigduino-package"]
+	path = arduino/arduino-zigduino-package
+	url = git@github.com:icube-inetlab/arduino-zigduino-package.git
