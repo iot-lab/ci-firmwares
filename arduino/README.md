@@ -31,8 +31,5 @@ $ ls *.elf
 zigduino_autotest.elf  zigduino_idle.elf
 ```
 
-2. Copy the firmware in the **iotlab-gateway** repositoty.
+2. Copy the firmware in the **iotlab-gateway** repository.
    The destination folder is **iotlab-gateway/gateway-code/static**.
-
-
-

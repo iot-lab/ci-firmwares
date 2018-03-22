@@ -36,8 +36,5 @@ a8_idle.elf       m3_autotest.elf  mega_idle.elf
 fox_autotest.elf  m3_idle.elf      samr21_autotest.elf
 ```
 
-2. Copy the firmware in the **iotlab-gateway** repositoty.
+2. Copy the firmware in the **iotlab-gateway** repository.
    The destination folder is **iotlab-gateway/gateway-code/static**.
-
-
-
