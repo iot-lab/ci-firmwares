@@ -24,5 +24,10 @@ PREFIX_arduino-mega2560 = mega
 ARCHIS += arduino-zero
 PREFIX_arduino-zero = arduino_zero
 
+ARCHIS += b-l072z-lrwan1
+PREFIX_st-lrwan1 = st-lrwan1
+
+ARCHIS += microbit
+PREFIX_microbit = microbit
 
 include Makefile.in
