@@ -65,6 +65,7 @@ static void byte_to_binary(unsigned x)
 
 static void *blink_thread(void *args)
 {
+    (void)args;
     while(1) {
         if (blink) {
             toggle_leds_on();
