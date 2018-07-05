@@ -22,7 +22,7 @@ ARCHIS += arduino-mega2560
 PREFIX_arduino-mega2560 = mega
 
 ARCHIS += arduino-zero
-PREFIX_arduino-zero = arduino_zero
+PREFIX_arduino-zero = arduino-zero
 
 ARCHIS += b-l072z-lrwan1
 PREFIX_b-l072z-lrwan1 = st-lrwan1
