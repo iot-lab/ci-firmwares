@@ -33,9 +33,9 @@ $(foreach archi, $(ARCHIS), \
 
 # Build firmwares
 firmwares/autotest/bin/%/autotest.elf:
-	make -C firmwares/autotest/ BOARD=$*
+	CFLAGS=-DLOG_LEVEL=0 make -C firmwares/autotest/ BOARD=$*
 firmwares/idle/bin/%/riot-idle.elf:
-	make -C firmwares/idle/ BOARD=$*
+	CFLAGS=-DLOG_LEVEL=0 make -C firmwares/idle/ BOARD=$*
 
 
 clean:
