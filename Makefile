@@ -33,4 +33,10 @@ PREFIX_microbit = microbit
 ARCHIS += b-l475e-iot01a
 PREFIX_b-l475e-iot01a = st-iotnode
 
+ARCHIS += nrf52dk
+PREFIX_nrf52dk = nrf52dk
+
+ARCHIS += nrf52840dk
+PREFIX_nrf52840dk = nrf52840dk
+
 include Makefile.in
