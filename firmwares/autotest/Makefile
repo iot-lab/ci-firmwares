@@ -5,7 +5,7 @@ APPLICATION = autotest
 BOARD ?= samr21-xpro
 
 # This has to be the absolute path to the RIOT base directory:
-RIOTBASE = $(CURDIR)/../../riot-upstream
+RIOTBASE ?= $(CURDIR)/../../riot-upstream
 
 FEATURES_REQUIRED += periph_uart
 FEATURES_REQUIRED += periph_gpio
