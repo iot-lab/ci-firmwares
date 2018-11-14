@@ -18,6 +18,9 @@ PREFIX_fox = fox
 ARCHIS += samr21-xpro
 PREFIX_samr21-xpro = samr21
 
+ARCHIS += samr30-xpro
+PREFIX_samr30-xpro = samr30
+
 ARCHIS += arduino-mega2560
 PREFIX_arduino-mega2560 = mega
 
