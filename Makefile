@@ -36,6 +36,9 @@ PREFIX_microbit = microbit
 ARCHIS += b-l475e-iot01a
 PREFIX_b-l475e-iot01a = st-iotnode
 
+ARCHIS += nrf51dk
+PREFIX_nrf51dk = nrf51dk
+
 ARCHIS += nrf52dk
 PREFIX_nrf52dk = nrf52dk
 
