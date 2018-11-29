@@ -17,12 +17,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "board.h"
 #include "shell.h"
 #include "xtimer.h"
 #include "thread.h"
-#include "periph/uart.h"
+
+#include "board.h"
+#include "periph/cpuid.h"
 #include "periph/gpio.h"
+#include "periph/uart.h"
 
 #define NUM_LEDS              (3U)
 
@@ -186,11 +188,33 @@ static int cmd_get_time(int argc, char **argv)
     return 0;
 }
 
+static int cmd_get_uid(int argc, char **argv)
+{
+    if (argc != 1) {
+        return 1;
+    }
+
+    uint8_t id[CPUID_LEN];
+
+    /* read the CPUID */
+    cpuid_get(id);
+
+    /* print the CPUID */
+    printf("ACK %s ", argv[0]);
+    for (unsigned int i = 0; i < CPUID_LEN; i++) {
+        printf("%02x", id[i]);
+    }
+    puts("");
+
+    return 0;
+}
+
 static const shell_command_t shell_commands[] = {
     { "echo",       "Simply write 'echo'",               cmd_echo},
-    { "get_time",   "Simply return current timer value", cmd_get_time},
-    { "leds_on",    "Turn leds on",                      cmd_leds_on},
-    { "leds_off",   "Turn leds off",                     cmd_leds_off},
+    { "get_time",   "Print board time",                  cmd_get_time},
+    { "get_uid",    "Print board uid",                   cmd_get_uid},
+    { "leds_on",    "Turn given leds on",                cmd_leds_on},
+    { "leds_off",   "Turn given leds off",               cmd_leds_off},
     { "leds_blink", "Make leds blink",                   cmd_leds_blink},
     { NULL, NULL, NULL }
 };
