@@ -48,4 +48,7 @@ PREFIX_frdm-kw41z = frdm-kw41z
 ARCHIS += pba-d-01-kw2x
 PREFIX_pba-d-01-kw2x = phynode
 
+ARCHIS += firefly
+PREFIX_firefly = firefly
+
 include Makefile.in
