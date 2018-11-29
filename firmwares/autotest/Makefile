@@ -9,7 +9,7 @@ RIOTBASE ?= $(CURDIR)/../../riot-upstream
 
 FEATURES_REQUIRED += periph_uart
 FEATURES_REQUIRED += periph_gpio
-FEATURES_REQUIRED += periph_cpuid
+FEATURES_OPTIONAL += periph_cpuid
 USEMODULE += shell xtimer
 
 # Comment this out to disable code in RIOT that does safety checking

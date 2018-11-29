@@ -22,9 +22,11 @@
 #include "thread.h"
 
 #include "board.h"
-#include "periph/cpuid.h"
 #include "periph/gpio.h"
 #include "periph/uart.h"
+#ifdef MODULE_PERIPH_CPUID
+#include "periph/cpuid.h"
+#endif
 
 #define NUM_LEDS              (3U)
 
@@ -188,6 +190,7 @@ static int cmd_get_time(int argc, char **argv)
     return 0;
 }
 
+#ifdef MODULE_PERIPH_CPUID
 static int cmd_get_uid(int argc, char **argv)
 {
     if (argc != 1) {
@@ -208,11 +211,14 @@ static int cmd_get_uid(int argc, char **argv)
 
     return 0;
 }
+#endif
 
 static const shell_command_t shell_commands[] = {
     { "echo",       "Simply write 'echo'",               cmd_echo},
     { "get_time",   "Print board time",                  cmd_get_time},
+#ifdef MODULE_PERIPH_CPUID
     { "get_uid",    "Print board uid",                   cmd_get_uid},
+#endif
     { "leds_on",    "Turn given leds on",                cmd_leds_on},
     { "leds_off",   "Turn given leds off",               cmd_leds_off},
     { "leds_blink", "Make leds blink",                   cmd_leds_blink},
