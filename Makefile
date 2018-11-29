@@ -45,4 +45,7 @@ PREFIX_nrf52840dk = nrf52840dk
 ARCHIS += frdm-kw41z
 PREFIX_frdm-kw41z = frdm-kw41z
 
+ARCHIS += pba-d-01-kw2x
+PREFIX_pba-d-01-kw2x = phynode
+
 include Makefile.in
