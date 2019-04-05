@@ -48,6 +48,9 @@ PREFIX_nrf52840dk = nrf52840dk
 ARCHIS += nrf52840-mdk
 PREFIX_nrf52840-mdk = nrf52840mdk
 
+ARCHIS += nrf52832-mdk
+PREFIX_nrf52832-mdk = nrf52832mdk
+
 ARCHIS += frdm-kw41z
 PREFIX_frdm-kw41z = frdm-kw41z
 
