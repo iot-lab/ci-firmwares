@@ -1,3 +1,4 @@
 [submodule "riot-upstream"]
 	path = riot-upstream
-	url = git@github.com:RIOT-OS/RIOT
+    url = git@github.com:RIOT-OS/RIOT
+    branch = 2019.04-branch
