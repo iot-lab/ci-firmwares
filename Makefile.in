@@ -20,6 +20,7 @@ all: $(AUTOTESTS) $(IDLES)
 define copy
 $(1): $(2)
 	cp $$^ $$@
+	chmod -x $$@
 endef
 
 $(foreach archi, $(ARCHIS), \
