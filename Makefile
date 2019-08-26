@@ -60,4 +60,10 @@ PREFIX_pba-d-01-kw2x = phynode
 ARCHIS += firefly
 PREFIX_firefly = firefly
 
+ARCHIS += samd21-xpro
+PREFIX_samd21-xpro = samd21
+
+ARCHIS += nucleo-f070rb
+PREFIX_nucleo-f070rb = nucleo-f070rb
+
 include Makefile.in
