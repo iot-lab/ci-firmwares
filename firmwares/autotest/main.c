@@ -101,6 +101,9 @@ static void *blink_thread(void *arg)
     blink_state_t * state = (blink_state_t *)arg;
     state->delay = 100;
 
+    msg_t msg_queue[4];
+    msg_init_queue(msg_queue, 4);
+
     xtimer_t blink_timer;
     while(1) {
         msg_t msg;
@@ -110,7 +113,6 @@ static void *blink_thread(void *arg)
             xtimer_usleep(state->delay * 1000U);
             toggle_leds_off();
             msg_t blink_msg;
-            msg_send(&blink_msg, blink_pid);
             xtimer_set_msg(&blink_timer, state->delay * 1000U, &blink_msg, blink_pid);
         }
     }
