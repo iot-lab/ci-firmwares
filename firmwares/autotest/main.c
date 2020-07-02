@@ -13,6 +13,7 @@
  * @}
  */
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -21,6 +22,7 @@
 #include "xtimer.h"
 #include "thread.h"
 #include "mutex.h"
+#include "msg.h"
 
 #include "board.h"
 #include "periph/gpio.h"
@@ -35,26 +37,32 @@ static char blink_stack[THREAD_STACKSIZE_DEFAULT];
 
 static int board_leds[NUM_LEDS] = { -1, -1, -1 };
 static uint8_t leds_indices[NUM_LEDS] = { 0, 0, 0 };
-static uint32_t delay = 100;
+
+static kernel_pid_t blink_pid;
 
 typedef struct {
     bool blink;
+    uint32_t delay;
     mutex_t lock;
 } blink_state_t;
 
 static blink_state_t blink_state;
 
-static void _blink_start(void)
+static void _blink_start(uint32_t delay)
 {
     mutex_lock(&blink_state.lock);
     blink_state.blink = true;
+    blink_state.delay = delay;
     mutex_unlock(&blink_state.lock);
+    msg_t msg;
+    msg_send(&msg, blink_pid);
 }
 
 static void _blink_stop(void)
 {
     mutex_lock(&blink_state.lock);
     blink_state.blink = false;
+    blink_state.delay = 100;
     mutex_unlock(&blink_state.lock);
 }
 
@@ -90,14 +98,21 @@ static void byte_to_binary(unsigned byte)
 
 static void *blink_thread(void *arg)
 {
-    const blink_state_t * state = (const blink_state_t *)arg;
+    blink_state_t * state = (blink_state_t *)arg;
+    state->delay = 100;
+
+    xtimer_t blink_timer;
     while(1) {
+        msg_t msg;
+        msg_receive(&msg);
         if (state->blink) {
             toggle_leds_on();
-            xtimer_usleep(delay * 1000U);
+            xtimer_usleep(state->delay * 1000U);
             toggle_leds_off();
+            msg_t blink_msg;
+            msg_send(&blink_msg, blink_pid);
+            xtimer_set_msg(&blink_timer, state->delay * 1000U, &blink_msg, blink_pid);
         }
-        xtimer_usleep(delay * 1000U);
     }
 
     return NULL;
@@ -148,22 +163,20 @@ static int cmd_leds_blink(int argc, char **argv)
     unsigned int leds = atoi(argv[1]);
     byte_to_binary(leds);
 
-    int delay_tmp = atoi(argv[2]);
-    if (delay_tmp == 0) {
+    uint32_t delay = atoi(argv[2]);
+    if (delay == 0) {
         toggle_leds_off();
         _blink_stop();
         printf("ACK %s STOP\n", argv[0]);
         return 0;
     }
 
-    if (delay_tmp > 10000) {
-        puts("NACK leds_blink: delay too long");
-        return 1;
+    if (blink_state.delay > 10000) {
+        delay = 10000;
     }
 
     toggle_leds_off();
-    delay = delay_tmp;
-    _blink_start();
+    _blink_start(delay);
 
     printf("ACK %s %d %" PRIu32 "\n", argv[0], leds, delay);
     return 0;
@@ -247,10 +260,10 @@ int main(void)
     board_leds[2] = LED2_PIN;
 #endif
 
-    thread_create(blink_stack, sizeof(blink_stack),
-                  THREAD_PRIORITY_MAIN - 1,
-                  THREAD_CREATE_STACKTEST, blink_thread,
-                  &blink_state, "Leds blink thread");
+    blink_pid = thread_create(blink_stack, sizeof(blink_stack),
+                              THREAD_PRIORITY_MAIN - 1,
+                              THREAD_CREATE_STACKTEST, blink_thread,
+                              &blink_state, "Leds blink thread");
 
     char buffer[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, buffer, SHELL_DEFAULT_BUFSIZE);
