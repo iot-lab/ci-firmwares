@@ -1,4 +1,4 @@
 [submodule "riot-upstream"]
 	path = riot-upstream
-    url = https://github.com:RIOT-OS/RIOT
+    url = https://github.com/RIOT-OS/RIOT
     branch = 2021.01-branch
