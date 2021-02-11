@@ -21,6 +21,9 @@ PREFIX_samr21-xpro = samr21
 ARCHIS += samr30-xpro
 PREFIX_samr30-xpro = samr30
 
+ARCHIS += samr34-xpro
+PREFIX_samr34-xpro = samr34
+
 ARCHIS += arduino-mega2560
 PREFIX_arduino-mega2560 = mega
 
@@ -65,5 +68,11 @@ PREFIX_samd21-xpro = samd21
 
 ARCHIS += nucleo-f070rb
 PREFIX_nucleo-f070rb = nucleo-f070rb
+
+ARCHIS += dwm1001
+PREFIX_dwm1001 = dwm1001
+
+ARCHIS += p-nucleo-wb55
+PREFIX_p-nucleo-wb55 = nucleo-wb55
 
 include Makefile.in
