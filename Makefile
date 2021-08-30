@@ -75,4 +75,7 @@ PREFIX_dwm1001 = dwm1001
 ARCHIS += p-nucleo-wb55
 PREFIX_p-nucleo-wb55 = nucleo-wb55
 
+ARCHIS += nucleo-wl55jc
+PREFIX_nucleo-wl55jc = nucleo-wl55jc
+
 include Makefile.in
