@@ -18,9 +18,14 @@
  * @}
  */
 
-#include "xtimer.h"
+#ifdef MODULE_PERIPH_EEPROM
+#include "periph/eeprom.h"
+#endif
 
 int main(void)
-{ 
+{
+#ifdef MODULE_PERIPH_EEPROM
+    eeprom_erase();
+#endif
     return 0;
 }
