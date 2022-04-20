@@ -33,6 +33,9 @@ PREFIX_b-l072z-lrwan1 = st-lrwan1
 ARCHIS += microbit
 PREFIX_microbit = microbit
 
+ARCHIS += microbit-v2
+PREFIX_microbit-v2 = microbit2
+
 ARCHIS += b-l475e-iot01a
 PREFIX_b-l475e-iot01a = st-iotnode
 
