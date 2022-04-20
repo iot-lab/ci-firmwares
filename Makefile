@@ -42,6 +42,9 @@ PREFIX_b-l475e-iot01a = st-iotnode
 ARCHIS += stm32f7508-dk
 PREFIX_stm32f7508-dk = st-f7508-dk
 
+ARCHIS += stm32f746g-disco
+PREFIX_stm32f746g-disco = st-f746g-disco
+
 ARCHIS += nrf51dk
 PREFIX_nrf51dk = nrf51dk
 
