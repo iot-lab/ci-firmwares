@@ -19,7 +19,7 @@
 #include <stdlib.h>
 
 #include "shell.h"
-#include "xtimer.h"
+#include "ztimer.h"
 #include "thread.h"
 #include "mutex.h"
 #include "msg.h"
@@ -104,16 +104,16 @@ static void *blink_thread(void *arg)
     msg_t msg_queue[4];
     msg_init_queue(msg_queue, 4);
 
-    xtimer_t blink_timer;
+    ztimer_t blink_timer;
     while(1) {
         msg_t msg;
         msg_receive(&msg);
         if (state->blink) {
             toggle_leds_on();
-            xtimer_usleep(state->delay * 1000U);
+            ztimer_sleep(ZTIMER_USEC, state->delay * 1000U);
             toggle_leds_off();
             msg_t blink_msg;
-            xtimer_set_msg(&blink_timer, state->delay * 1000U, &blink_msg, blink_pid);
+            ztimer_set_msg(ZTIMER_USEC, &blink_timer, state->delay * 1000U, &blink_msg, blink_pid);
         }
     }
 
@@ -203,7 +203,7 @@ static int cmd_get_time(int argc, char **argv)
     if (argc != 1) {
         return 1;
     }
-    uint32_t now = xtimer_now().ticks32;
+    uint32_t now = ztimer_now(ZTIMER_USEC);
 
     printf("ACK %s %u ticks_32khz\n", argv[0], (unsigned int)now);
 
