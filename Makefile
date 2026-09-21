@@ -84,4 +84,7 @@ PREFIX_p-nucleo-wb55 = nucleo-wb55
 ARCHIS += nucleo-wl55jc
 PREFIX_nucleo-wl55jc = nucleo-wl55jc
 
+ARCHIS += rpi-pico
+PREFIX_rpi-pico = rpi-pico
+
 include Makefile.in
